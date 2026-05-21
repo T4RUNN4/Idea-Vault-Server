@@ -7,11 +7,13 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(cors({
-  origin: "https://fantastic-meme-rj5w9pwj7462x6vx-3000.app.github.dev",
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-}));
+app.use(
+  cors({
+    origin: "https://fantastic-meme-rj5w9pwj7462x6vx-3000.app.github.dev",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
 
 const PORT = process.env.PORT || 5000;
 const uri = process.env.MONGO_URI;
@@ -24,7 +26,7 @@ const client = new MongoClient(uri, {
   },
 });
 
-let collection
+let collection;
 
 async function run() {
   try {
@@ -56,10 +58,13 @@ async function run() {
     });
 
     app.get("/ideas/trending", async (req, res) => {
-      const trendingIdeas = await collection.find({ isTrending: true, $limit: 6 }).toArray();
+      const trendingIdeas = await collection
+        .aggregate([{ $match: { isTrending: true } }, { $limit: 6 }])
+        .toArray();
+
       res.json(trendingIdeas);
     });
-
+    
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
