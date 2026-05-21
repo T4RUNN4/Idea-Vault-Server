@@ -55,6 +55,11 @@ async function run() {
       res.json(idea);
     });
 
+    app.get("/ideas/trending", async (req, res) => {
+      const trendingIdeas = await collection.find({ isTrending: true, $limit: 6 }).toArray();
+      res.json(trendingIdeas);
+    });
+
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
