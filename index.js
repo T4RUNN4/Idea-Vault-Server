@@ -65,6 +65,11 @@ async function run() {
       res.json(idea);
     });
 
+    app.delete("/ideas/:id", async (req, res) => {
+      const { id } = req.params;
+      const result = await collection.deleteOne({ _id: new ObjectId(id) });
+      res.json(result);
+    });
 
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
