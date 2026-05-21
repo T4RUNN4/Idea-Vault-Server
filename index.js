@@ -13,7 +13,7 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 const uri = process.env.MONGO_URI;
 
 const client = new MongoClient(uri, {
