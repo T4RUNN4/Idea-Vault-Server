@@ -59,12 +59,6 @@ async function run() {
       res.json(trendingIdeas);
     });
 
-    app.get("/ideas/:email", async (req, res) => {
-      const email = req.params.email;
-      const userIdeas = await collection.find({ user: email }).toArray();
-      res.json(userIdeas);
-    });
-
     app.get("/ideas/:id", async (req, res) => {
       const { id } = req.params;
       const idea = await collection.findOne({ _id: new ObjectId(id) });
