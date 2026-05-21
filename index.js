@@ -28,7 +28,7 @@ let collection
 
 async function run() {
   try {
-    await client.connect();
+    // await client.connect();
 
     const db = client.db("idea-vault");
     collection = db.collection("ideas");
