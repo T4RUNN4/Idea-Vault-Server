@@ -50,13 +50,19 @@ async function run() {
       const ideas = await collection.find().toArray();
       res.json(ideas);
     });
-    
+
     app.get("/ideas/trending", async (req, res) => {
       const trendingIdeas = await collection
         .aggregate([{ $match: { isTrending: true } }, { $limit: 6 }])
         .toArray();
 
       res.json(trendingIdeas);
+    });
+
+    app.get("/ideas/:email", async (req, res) => {
+      const email = req.params.email;
+      const userIdeas = await collection.find({ user: email }).toArray();
+      res.json(userIdeas);
     });
 
     app.get("/ideas/:id", async (req, res) => {
