@@ -1,11 +1,20 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const cors = require("cors");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+
 dotenv.config();
 
-const uri = process.env.MONGO_URI;
 const app = express();
+app.use(express.json());
+app.use(cors({
+  origin: "https://fantastic-meme-rj5w9pwj7462x6vx-3000.app.github.dev",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
 const PORT = process.env.PORT;
+const uri = process.env.MONGO_URI;
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -15,12 +24,14 @@ const client = new MongoClient(uri, {
   },
 });
 
+let collection
+
 async function run() {
   try {
     await client.connect();
 
     const db = client.db("idea-vault");
-    const collection = db.collection("ideas");
+    collection = db.collection("ideas");
 
     app.post("/ideas", async (req, res) => {
       const idea = req.body;
@@ -29,20 +40,27 @@ async function run() {
       res.json(result);
     });
 
-    await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!",
-    );
+    app.get("/", (req, res) => {
+      res.send("App is running!");
+    });
+
+    app.get("/ideas", async (req, res) => {
+      const ideas = await collection.find().toArray();
+      res.json(ideas);
+    });
+
+    app.get("/ideas/:id", async (req, res) => {
+      const { id } = req.params;
+      const idea = await collection.findOne({ _id: new ObjectId(id) });
+      res.json(idea);
+    });
+
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
   } finally {
-    await client.close();
+    // await client.close();
   }
 }
+
 run().catch(console.dir);
-
-app.get("/", (req, res) => {
-  res.send("App is running!");
-});
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
