@@ -50,13 +50,7 @@ async function run() {
       const ideas = await collection.find().toArray();
       res.json(ideas);
     });
-
-    app.get("/ideas/:id", async (req, res) => {
-      const { id } = req.params;
-      const idea = await collection.findOne({ _id: new ObjectId(id) });
-      res.json(idea);
-    });
-
+    
     app.get("/ideas/trending", async (req, res) => {
       const trendingIdeas = await collection
         .aggregate([{ $match: { isTrending: true } }, { $limit: 6 }])
@@ -64,7 +58,14 @@ async function run() {
 
       res.json(trendingIdeas);
     });
-    
+
+    app.get("/ideas/:id", async (req, res) => {
+      const { id } = req.params;
+      const idea = await collection.findOne({ _id: new ObjectId(id) });
+      res.json(idea);
+    });
+
+
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });
