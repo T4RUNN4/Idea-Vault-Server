@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(
   cors({
     origin: "https://fantastic-meme-rj5w9pwj7462x6vx-3000.app.github.dev",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
