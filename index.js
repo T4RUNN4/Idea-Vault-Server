@@ -65,7 +65,7 @@ async function run() {
       res.json(idea);
     });
 
-    app.put("/ideas/:id", async (req, res) => {
+    app.patch("/ideas/:id", async (req, res) => {
       const { id } = req.params;
       const updatedIdea = req.body;
 
@@ -75,7 +75,7 @@ async function run() {
       );
 
       res.json(result);
-    }
+    });
 
     app.delete("/ideas/:id", async (req, res) => {
       const { id } = req.params;
