@@ -65,6 +65,18 @@ async function run() {
       res.json(idea);
     });
 
+    app.put("/ideas/:id", async (req, res) => {
+      const { id } = req.params;
+      const updatedIdea = req.body;
+
+      const result = await collection.updateOne(
+        { _id: new ObjectId(id) },
+        { $set: updatedIdea },
+      );
+
+      res.json(result);
+    }
+
     app.delete("/ideas/:id", async (req, res) => {
       const { id } = req.params;
       const result = await collection.deleteOne({ _id: new ObjectId(id) });
